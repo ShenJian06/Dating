@@ -9,21 +9,29 @@
 <body>
   <div class="topbar">
     <img src="icons/logo.png" class="logo" />
-    <div class="filters-icon" onclick="toggleSettings()">
-      <img src="icons/settings-sliders.svg" alt="Settings" />
+
+    <div class="topbar-icons">
+      <!-- Iconiță notificări PNG -->
+      <div class="notif-icon" title="Notificări">
+        <img src="icons/notification-bell.png" alt="Notificări" />
+      </div>
+
+      <!-- Buton setări -->
+      <div class="filters-icon" onclick="toggleSettings()">
+        <img src="icons/settings-sliders.svg" alt="Settings" />
+      </div>
     </div>
   </div>
 
   <div id="settings-popup" class="settings-popup hidden">
-    <label for="settings-upload" style="margin-bottom: 10px; display: block; font-weight: bold; color: #f0eaff;">Încarcă imagini multiple:</label>
-    
-    <!-- Buton custom pentru file input -->
-    <label for="settings-upload" class="custom-upload">Selectează fișiere</label>
-    <div class="custom-upload">
-  <label for="settings-upload" class="upload-btn">Selectează fișiere</label>
-  <input type="file" id="settings-upload" accept="image/*" multiple />
-</div>
+    <label for="settings-upload" style="margin-bottom: 10px; display: block; font-weight: bold; color: #f0eaff;">
+      Încarcă imagini multiple:
+    </label>
 
+    <div class="custom-upload">
+      <label for="settings-upload" class="upload-btn">Selectează fișiere</label>
+      <input type="file" id="settings-upload" accept="image/*" multiple />
+    </div>
 
     <div id="details-form" class="hidden">
       <h4>Completează detaliile pentru fiecare poză:</h4>
