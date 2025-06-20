@@ -21,9 +21,7 @@ html, body {
   background: linear-gradient(to top, #1c1a2fec, #2e245aec);
 }
 
-.logo {
-  height: 40px;
-}
+
 
 .filters-icon {
   width: 30px;
@@ -52,8 +50,8 @@ html, body {
 }
 
 .card-container {
-  width: 420px;
-  height: 610px;
+  width: 430px;
+  height: 660px;
   position: relative;
   margin-top: 5px;
 }
@@ -431,7 +429,36 @@ html, body {
 }
 
 .logo {
-  height: 40px;
+  height: 80px;
   filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.4)) drop-shadow(0 0 12px rgba(137, 88, 255, 0.5));
 }
 
+.topbar-icons {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.notif-icon,
+.filters-icon {
+  width: 25px;
+  height: 25px;
+  background: rgba(255, 255, 255, 0.014);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.notif-icon:hover,
+.filters-icon:hover {
+  background: rgba(255, 255, 255, 0);
+  transform: scale(1.1);
+}
+
+.notif-icon img {
+  width: 30px;
+  height: 30px;
+}
