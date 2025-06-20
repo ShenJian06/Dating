@@ -1,5 +1,4 @@
 let cards = [];
-let currentIndex = 0;
 let imageMeta = [];
 
 window.addEventListener("DOMContentLoaded", () => {
@@ -15,7 +14,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
 document.getElementById('settings-upload').addEventListener('change', function (e) {
   const files = Array.from(e.target.files);
-  imageMeta = files.map((file, i) => ({
+  imageMeta = files.map((file) => ({
     file,
     url: URL.createObjectURL(file),
     nume: '',
@@ -62,7 +61,12 @@ document.getElementById('submit-details').addEventListener('click', () => {
 function loadCards(data) {
   const container = document.getElementById('card-container');
   container.innerHTML = '';
-  cards = shuffleArray(data.map(info => {
+  cards = [];
+
+  // reverse pentru ca ultimul card să fie cel mai în spate
+  const reversed = [...data].reverse();
+
+  reversed.forEach((info, i) => {
     const frame = document.createElement('div');
     frame.className = 'card-frame';
 
@@ -87,17 +91,8 @@ function loadCards(data) {
     addSwipeEvents(card);
     frame.appendChild(card);
     container.appendChild(frame);
-    return card;
-  }).reverse());
-  currentIndex = 0;
-}
-
-function shuffleArray(array) {
-  for (let i = array.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [array[i], array[j]] = [array[j], array[i]];
-  }
-  return array;
+    cards.unshift(card); // adaugă în față pentru ordine corectă
+  });
 }
 
 function addSwipeEvents(card) {
@@ -177,12 +172,42 @@ function swipe(direction, cardEl = null) {
   }[direction]);
 
   setTimeout(() => {
-    card.remove();
     const container = document.getElementById('card-container');
-    container.appendChild(card);
-    card.classList.remove('swipe-left', 'swipe-right', 'swipe-up', 'approve', 'reject', 'favorite');
-    card.style.transform = 'translate(0, 0) rotate(0deg)';
-    card.style.transition = 'none';
-    cards.push(cards.shift());
+
+    // Elimină cardul vechi
+    card.parentElement.remove();
+
+    // Mută imaginea la finalul array-ului
+    const moved = imageMeta.shift();
+    imageMeta.push(moved);
+
+    // Generează noul card
+    const frame = document.createElement('div');
+    frame.className = 'card-frame';
+
+    const newCard = document.createElement('div');
+    newCard.className = 'card';
+    newCard.style.backgroundImage = `url(${moved.url})`;
+
+    const star = document.createElement('div');
+    star.className = 'star';
+    star.textContent = '⭐';
+    newCard.appendChild(star);
+
+    const dist = Math.floor(Math.random() * 30) + 1;
+
+    const info = document.createElement('div');
+    info.className = 'card-info';
+    info.innerHTML = `<strong>${moved.nume}</strong>, ${moved.varsta}<br>
+                      <span>${moved.ocupatie}</span><br>
+                      <small>${dist} km distanță</small>`;
+    newCard.appendChild(info);
+
+    addSwipeEvents(newCard);
+    frame.appendChild(newCard);
+    container.insertBefore(frame, container.firstChild);
+
+    cards.pop();
+    cards.unshift(newCard);
   }, 600);
 }
