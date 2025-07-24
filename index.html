@@ -9,30 +9,25 @@
 <body>
   <div class="topbar">
     <img src="icons/logo.png" class="logo" />
-
     <div class="topbar-icons">
-      <!-- Iconiță notificări PNG -->
       <div class="notif-icon" title="Notificări">
         <img src="icons/notification-bell.png" alt="Notificări" />
       </div>
-
-      <!-- Buton setări -->
       <div class="filters-icon" onclick="toggleSettings()">
         <img src="icons/settings-sliders.svg" alt="Settings" />
       </div>
     </div>
   </div>
 
+  <!-- === POPUP UPLOAD === -->
   <div id="settings-popup" class="settings-popup hidden">
     <label for="settings-upload" style="margin-bottom: 10px; display: block; font-weight: bold; color: #f0eaff;">
       Încarcă imagini multiple:
     </label>
-
     <div class="custom-upload">
       <label for="settings-upload" class="upload-btn">Selectează fișiere</label>
       <input type="file" id="settings-upload" accept="image/*" multiple />
     </div>
-
     <div id="details-form" class="hidden">
       <h4>Completează detaliile pentru fiecare poză:</h4>
       <div id="form-fields"></div>
@@ -40,6 +35,7 @@
     </div>
   </div>
 
+  <!-- === CARDURI & BUTOANE SWIPE === -->
   <div class="main-app">
     <div id="card-container" class="card-container"></div>
     <div class="action-buttons">
@@ -49,10 +45,11 @@
     </div>
   </div>
 
+  <!-- === BOTTOM NAV === -->
   <div class="bottom-nav">
     <button><img src="icons/home.svg" alt="Home" /></button>
     <button><img src="icons/discover.svg" alt="Discover" /></button>
-    <button class="center"><img src="icons/logo.svg" alt="Logo" /></button>
+    <button class="center reset-icon"><img src="icons/logo.svg" alt="Reset" /></button>
     <button><img src="icons/chat.svg" alt="Chat" /></button>
     <button><img src="icons/profile.svg" alt="Profile" /></button>
   </div>
