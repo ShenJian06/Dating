@@ -1,5 +1,6 @@
 let cards = [];
 let imageMeta = [];
+let originalMeta = [];
 
 window.addEventListener("DOMContentLoaded", () => {
   const filtersIcon = document.querySelector(".filters-icon");
@@ -10,20 +11,36 @@ window.addEventListener("DOMContentLoaded", () => {
       popup.classList.toggle("hidden");
     });
   }
-});
 
-document.getElementById('settings-upload').addEventListener('change', function (e) {
-  const files = Array.from(e.target.files);
-  imageMeta = files.map((file) => ({
-    file,
-    url: URL.createObjectURL(file),
-    nume: '',
-    varsta: '',
-    ocupatie: ''
-  }));
+  document.getElementById('settings-upload').addEventListener('change', function (e) {
+    const files = Array.from(e.target.files);
+    imageMeta = files.map((file) => ({
+      file,
+      url: URL.createObjectURL(file),
+      nume: '',
+      varsta: '',
+      ocupatie: ''
+    }));
 
-  generateMetaForm(imageMeta);
-  document.getElementById('details-form').classList.remove('hidden');
+    generateMetaForm(imageMeta);
+    document.getElementById('details-form').classList.remove('hidden');
+  });
+
+  document.getElementById('submit-details').addEventListener('click', () => {
+    if (imageMeta.some(m => !m.nume || !m.varsta || !m.ocupatie)) {
+      alert('Completează toate câmpurile!');
+      return;
+    }
+    originalMeta = [...imageMeta];
+    loadCards(imageMeta);
+    document.getElementById("settings-popup").classList.add("hidden");
+  });
+
+  document.querySelector('.reset-icon')?.addEventListener('click', () => {
+    if (originalMeta.length === 0) return;
+    imageMeta = [...originalMeta];
+    loadCards(imageMeta);
+  });
 });
 
 function generateMetaForm(data) {
@@ -49,24 +66,12 @@ function generateMetaForm(data) {
   });
 }
 
-document.getElementById('submit-details').addEventListener('click', () => {
-  if (imageMeta.some(m => !m.nume || !m.varsta || !m.ocupatie)) {
-    alert('Completează toate câmpurile!');
-    return;
-  }
-  loadCards(imageMeta);
-  document.getElementById("settings-popup").classList.add("hidden");
-});
-
 function loadCards(data) {
   const container = document.getElementById('card-container');
   container.innerHTML = '';
   cards = [];
 
-  // reverse pentru ca ultimul card să fie cel mai în spate
-  const reversed = [...data].reverse();
-
-  reversed.forEach((info, i) => {
+  [...data].reverse().forEach(info => {
     const frame = document.createElement('div');
     frame.className = 'card-frame';
 
@@ -80,7 +85,6 @@ function loadCards(data) {
     card.appendChild(star);
 
     const dist = Math.floor(Math.random() * 30) + 1;
-
     const cardInfo = document.createElement('div');
     cardInfo.className = 'card-info';
     cardInfo.innerHTML = `<strong>${info.nume}</strong>, ${info.varsta}<br>
@@ -91,8 +95,33 @@ function loadCards(data) {
     addSwipeEvents(card);
     frame.appendChild(card);
     container.appendChild(frame);
-    cards.unshift(card); // adaugă în față pentru ordine corectă
+    cards.unshift(card); // păstrăm topCard în față
   });
+}
+
+function swipe(direction, cardEl = null) {
+  const card = cardEl || cards[0];
+  if (!card) return;
+
+  const animClass = {
+    left: 'swipe-left',
+    right: 'swipe-right',
+    star: 'swipe-up'
+  }[direction];
+
+  card.classList.add(animClass);
+
+  setTimeout(() => {
+    card.parentElement.remove();
+    cards.shift();
+  }, 600);
+}
+
+function swipeButton(direction) {
+  const topCard = cards[0];
+  if (topCard) {
+    swipe(direction, topCard);
+  }
 }
 
 function addSwipeEvents(card) {
@@ -159,55 +188,4 @@ function addSwipeEvents(card) {
     dragging = false;
     finishSwipe();
   });
-}
-
-function swipe(direction, cardEl = null) {
-  const card = cardEl || cards[0];
-  if (!card) return;
-
-  card.classList.add({
-    left: 'swipe-left',
-    right: 'swipe-right',
-    star: 'swipe-up'
-  }[direction]);
-
-  setTimeout(() => {
-    const container = document.getElementById('card-container');
-
-    // Elimină cardul vechi
-    card.parentElement.remove();
-
-    // Mută imaginea la finalul array-ului
-    const moved = imageMeta.shift();
-    imageMeta.push(moved);
-
-    // Generează noul card
-    const frame = document.createElement('div');
-    frame.className = 'card-frame';
-
-    const newCard = document.createElement('div');
-    newCard.className = 'card';
-    newCard.style.backgroundImage = `url(${moved.url})`;
-
-    const star = document.createElement('div');
-    star.className = 'star';
-    star.textContent = '⭐';
-    newCard.appendChild(star);
-
-    const dist = Math.floor(Math.random() * 30) + 1;
-
-    const info = document.createElement('div');
-    info.className = 'card-info';
-    info.innerHTML = `<strong>${moved.nume}</strong>, ${moved.varsta}<br>
-                      <span>${moved.ocupatie}</span><br>
-                      <small>${dist} km distanță</small>`;
-    newCard.appendChild(info);
-
-    addSwipeEvents(newCard);
-    frame.appendChild(newCard);
-    container.insertBefore(frame, container.firstChild);
-
-    cards.pop();
-    cards.unshift(newCard);
-  }, 600);
 }
